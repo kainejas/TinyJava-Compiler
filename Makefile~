@@ -1,0 +1,74 @@
+##
+## Version:     1
+##
+## Date:        02/22/2012
+##
+## Abstract Syntax Tree example
+##
+## Makefile
+##
+## K.J. Kochut
+##
+
+
+CXX		= g++
+CPPFLAGS	= -I/home/profs/kochut/csx570/ast
+CXXFLAGS	= -g -DYYDEBUG 
+LDFLAGS		= -L/home/profs/kochut/csx570/ast
+LDLIBS		= -lAst -lfl
+YACC            = bison -y
+LEX             = flex
+
+
+SRCS            = main-tree.cpp lex.yy.c y.tab.c AstPrinter.cpp
+
+HDRS            =  y.tab.h Ast.h Entry.h Variable.h
+
+OBJS	        = main-tree.o y.tab.o lex.yy.o AstPrinter.o Entry.o Variable.o
+
+
+
+# compile rules
+#
+COMPILE.cpp     = $(CXX) $(CPPFLAGS) $(CXXFLAGS)  -c
+LINK.cpp        = $(CXX) $(CXXFLAGS) $(LDFLAGS)
+
+.SUFFIXES: .cpp
+
+.cpp.o:
+	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
+
+all: arith
+
+arith: Makefile $(OBJS) 
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDFLAGS) $(LDLIBS)
+
+# non-standard target dependencies
+y.tab.o: Makefile y.tab.c /home/profs/kochut/csx570/ast/Ast.h
+	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) y.tab.c
+
+lex.yy.o: Makefile lex.yy.c y.tab.h /home/profs/kochut/csx570/ast/Ast.h
+	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) lex.yy.c
+Variable.o: Makefile Entry.h Variable.h
+	$(CXX) -c Variable.cpp
+Entry.o: Makefile Entry.h
+	$(CXX) -c Entry.cpp
+y.tab.c y.tab.h: Makefile tjc2.y
+	$(YACC) -dv tjc2.y
+
+lex.yy.c: Makefile spec.l
+	$(LEX) spec.l
+
+#clean targets
+clean:
+	/bin/rm -f *.o
+
+realclean: clean
+	/bin/rm -f arith
+
+#################################################################
+#################################################################
+## Dependencies
+##
+main-tree.o: main-tree.cpp /home/profs/kochut/csx570/ast
+

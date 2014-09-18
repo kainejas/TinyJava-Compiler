@@ -1,0 +1,7 @@
+Jason Kaine
+Project 3
+
+To compile the tjc program, first type 'make' in the command line.
+Then type './tjc filename'. The program will only accept .java files.
+If there are no errors to report, tjc will generate a .class file.
+To run the .class file, type java ClassName (e.g. java Sample1 )

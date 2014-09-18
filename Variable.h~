@@ -1,0 +1,8 @@
+#include "Entry.h"
+class Variable: public Entry {
+public:
+	Variable(char*,int);
+	int tp; //variable's type
+	Etype getType();
+
+};
